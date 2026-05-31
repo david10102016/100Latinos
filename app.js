@@ -328,7 +328,7 @@ async function presWrong() {
   if(STATE.phase==='stealing'){
     STATE.wrongs[t]++;
     triggerXExplosion(); sndWrong();
-    STATE.phase='roundover';
+    STATE.phase='stealfailed';
     STATE.roundPoints=0; // nadie se lleva los puntos
     presToast(`🔴 Robo fallido — presioná 👁 Revelar todo para mostrar las respuestas`,'bad');
     renderFromState(); await saveState();
@@ -353,10 +353,11 @@ async function presWrong() {
 
 async function presRevealAll() {
   const q=currentQuestion(); if(!q) return;
+  const isFailed = STATE.phase==='stealfailed';
   if(!STATE.revealed) STATE.revealed=new Array(q.resp.length).fill(false);
   let added=0;
   q.resp.forEach((r,i)=>{if(!STATE.revealed[i]){STATE.revealed[i]=true;added+=r.v;}});
-  STATE.roundPoints=(STATE.roundPoints||0)+added;
+  if(!isFailed) STATE.roundPoints=(STATE.roundPoints||0)+added;
   STATE.phase='roundover';
   renderFromState(); await saveState();
   presToast('👁 Todo revelado — presioná ＋ Sumar puntos para asignarlos','info');
@@ -364,7 +365,7 @@ async function presRevealAll() {
 
 async function presPassPoints() {
   // Bloquear si no hay puntos en el pozo (robo fallido u otro caso sin puntos)
-  if(!STATE.roundPoints || STATE.roundPoints===0){
+  if(!STATE.roundPoints || STATE.roundPoints===0 || STATE.phase==='stealfailed'){
     presToast('Sin puntos en el pozo — presioná Siguiente →','info');
     return;
   }
