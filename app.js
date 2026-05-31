@@ -197,9 +197,9 @@ function updateQuestion() {
   const txt = q ? q.q : 'Esperando la primera pregunta...';
   ['pres-qtext','proj-qtext','spec-qtext'].forEach(id=>setText(id,txt));
   if(el('proj-inner')&&el('proj-waiting')){
-    const w = STATE.phase==='waiting';
-    el('proj-inner').style.display   = w?'none':'flex';
-    el('proj-waiting').style.display = w?'flex':'none';
+    const w = STATE.phase==='waiting' || !q;
+    el('proj-inner').style.display   = w ? 'none' : 'flex';
+    el('proj-waiting').style.display = w ? 'flex' : 'none';
   }
 }
 
@@ -322,8 +322,10 @@ async function presWrong() {
   triggerXExplosion(); sndWrong();
   const maxF=STATE.maxFails||3;
   if(STATE.wrongs[t]>=maxF){
-    STATE.phase='stealing'; STATE.currentTeam=1-t;
-    presToast(`3 FALLOS — ${STATE.names[STATE.currentTeam]} puede robar`,'bad');
+    // Auto-switch: the other team takes over automatically, no presenter action needed
+    STATE.currentTeam=1-t;
+    STATE.phase='stealing';
+    presToast(`3 FALLOS — pasa automáticamente a ${STATE.names[STATE.currentTeam]}`,'bad');
     sndSteal();
   } else {
     presToast(`Fallo ${STATE.wrongs[t]} de ${maxF}`,'bad');
