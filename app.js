@@ -301,7 +301,7 @@ function currentQuestion() {
 async function presSetTeam(t) {
   STATE.currentTeam = t; STATE.phase='playing';
   renderFromState(); await saveState();
-  presToast(`Turno de ${STATE.names[t]}`,'info');
+  presToast(`▶ Turno de ${STATE.names[t]} — revelá respuestas o marcá fallos`,'info');
 }
 
 async function presRevealOne(idx) {
@@ -310,7 +310,12 @@ async function presRevealOne(idx) {
   STATE.revealed[idx]=true;
   STATE.roundPoints=(STATE.roundPoints||0)+q.resp[idx].v;
   sndReveal();
-  presToast(`✓ ${q.resp[idx].t}  +${q.resp[idx].v}`,'ok');
+  const allRevealed = q.resp.every((_,i)=>STATE.revealed[i]);
+  if(allRevealed){
+    presToast(`✓ ${q.resp[idx].t} +${q.resp[idx].v} — Todo revelado, presioná ＋ Sumar puntos`,'ok');
+  } else {
+    presToast(`✓ ${q.resp[idx].t} +${q.resp[idx].v} — Seguí revelando o presioná ＋ Sumar puntos`,'ok');
+  }
   renderFromState(); await saveState();
 }
 
@@ -318,17 +323,30 @@ async function presWrong() {
   const t=STATE.currentTeam<0?0:STATE.currentTeam;
   STATE.currentTeam=t;
   if(!STATE.wrongs) STATE.wrongs=[0,0];
+
+  // Si ya estamos en fase robo, este es el único intento del equipo robador — termina la ronda
+  if(STATE.phase==='stealing'){
+    STATE.wrongs[t]++;
+    triggerXExplosion(); sndWrong();
+    STATE.phase='roundover';
+    STATE.roundPoints=0; // nadie se lleva los puntos
+    presToast(`🔴 Robo fallido — presioná 👁 Revelar todo para mostrar las respuestas`,'bad');
+    renderFromState(); await saveState();
+    return;
+  }
+
+  // Turno normal
   STATE.wrongs[t]++;
   triggerXExplosion(); sndWrong();
   const maxF=STATE.maxFails||3;
   if(STATE.wrongs[t]>=maxF){
-    // Auto-switch: the other team takes over automatically, no presenter action needed
+    // Auto-switch al equipo contrario para robar
     STATE.currentTeam=1-t;
     STATE.phase='stealing';
-    presToast(`3 FALLOS — pasa automáticamente a ${STATE.names[STATE.currentTeam]}`,'bad');
+    presToast(`3 FALLOS — pasa automáticamente a ${STATE.names[STATE.currentTeam]} — tiene 1 intento de robo`,'bad');
     sndSteal();
   } else {
-    presToast(`Fallo ${STATE.wrongs[t]} de ${maxF}`,'bad');
+    presToast(`Fallo ${STATE.wrongs[t]} de ${maxF} — seguí revelando respuestas`,'bad');
   }
   renderFromState(); await saveState();
 }
@@ -341,14 +359,19 @@ async function presRevealAll() {
   STATE.roundPoints=(STATE.roundPoints||0)+added;
   STATE.phase='roundover';
   renderFromState(); await saveState();
-  presToast('Todas reveladas','info');
+  presToast('👁 Todo revelado — presioná ＋ Sumar puntos para asignarlos','info');
 }
 
 async function presPassPoints() {
+  // Bloquear si no hay puntos en el pozo (robo fallido u otro caso sin puntos)
+  if(!STATE.roundPoints || STATE.roundPoints===0){
+    presToast('Sin puntos en el pozo — presioná Siguiente →','info');
+    return;
+  }
   const t=STATE.currentTeam<0?0:STATE.currentTeam;
   STATE.scores[t]=(STATE.scores[t]||0)+(STATE.roundPoints||0);
   STATE.roundPoints=0; STATE.phase='roundover';
-  presToast(`+puntos para ${STATE.names[t]}`,'ok');
+  presToast(`✅ +puntos para ${STATE.names[t]} — presioná Siguiente →`,'ok');
   sndCorrect(); renderFromState(); await saveState();
 }
 
@@ -365,10 +388,12 @@ async function presNext() {
 }
 
 async function presReset() {
+  if(!confirm('¿Reiniciar la partida? Se pierden todos los puntos.')) return;
   STATE={...DEFAULT_STATE,names:STATE.names,school:STATE.school,maxQ:STATE.maxQ,maxFails:STATE.maxFails};
   el('winner-overlay').classList.remove('show');
   renderFromState(); await saveState();
   if(currentRole) showView(currentRole);
+  presToast('🔄 Partida reiniciada — elegí quién empieza','info');
 }
 
 function presToast(msg,type) {
@@ -518,16 +543,30 @@ async function admDeleteQ(i) {
 async function admStartGame() {
   const qs=QUESTIONS.filter(q=>q.active!==false);
   if(!qs.length){alert('Agregá al menos una pregunta');return;}
+  // Mezclar preguntas activas aleatoriamente
+  shuffleQuestions();
   STATE.qIdx=0; STATE.scores=[0,0]; STATE.wrongs=[0,0];
   STATE.revealed=[]; STATE.roundPoints=0; STATE.currentTeam=-1; STATE.phase='waiting';
-  await saveState(); alert('✅ Partida iniciada');
+  await saveState(); alert('✅ Partida iniciada — preguntas mezcladas aleatoriamente');
 }
 
 async function admResetGame() {
   if(!confirm('¿Reiniciar la partida?')) return;
+  shuffleQuestions();
   STATE.qIdx=0; STATE.scores=[0,0]; STATE.wrongs=[0,0];
   STATE.revealed=[]; STATE.roundPoints=0; STATE.currentTeam=-1; STATE.phase='waiting';
-  await saveState(); alert('✅ Reiniciado');
+  await saveState(); alert('✅ Reiniciado — preguntas mezcladas aleatoriamente');
+}
+
+// Mezcla solo las preguntas activas, deja inactivas al final
+function shuffleQuestions() {
+  const active   = QUESTIONS.filter(q=>q.active!==false);
+  const inactive = QUESTIONS.filter(q=>q.active===false);
+  for(let i=active.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [active[i],active[j]]=[active[j],active[i]];
+  }
+  QUESTIONS=[...active,...inactive];
 }
 
 // ============================================================
