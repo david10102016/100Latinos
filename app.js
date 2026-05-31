@@ -401,7 +401,7 @@ function presToast(msg,type) {
   const t=el('pres-toast'); if(!t) return;
   t.textContent=msg; t.className=`show ${type}`;
   clearTimeout(presToast._t);
-  presToast._t=setTimeout(()=>t.className='',2200);
+  presToast._t=setTimeout(()=>t.className='',5000);
 }
 
 // ============================================================
