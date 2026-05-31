@@ -1732,6 +1732,11 @@ function spawnConfetti() {
 // ============================================================
 async function loadAdminData() {
   if (sb) await loadState();
+  // Si Supabase no tiene preguntas, subir las por defecto
+  if (!QUESTIONS || QUESTIONS.length === 0) {
+    QUESTIONS = DEFAULT_QUESTIONS.map(q => ({...q}));
+    await saveState();
+  }
   // Fill form
   el('adm-school').value  = STATE.school||'';
   el('adm-t1').value      = (STATE.names||[])[0]||'';
@@ -1851,9 +1856,9 @@ shakeStyle.textContent = '@keyframes shake{0%,100%{transform:translateX(0)}20%{t
 document.head.appendChild(shakeStyle);
 
 // ============================================================
-//  INIT — load default questions if none
+//  PREGUNTAS POR DEFECTO
 // ============================================================
-QUESTIONS = [
+const DEFAULT_QUESTIONS = [
   { q:'¿Cuál es el transporte más usado para llegar al colegio?', active:true,
     resp:[{t:'Moto',v:38},{t:'A pie',v:25},{t:'Trufi / micro',v:18},{t:'Me traen mis papás',v:12},{t:'Bicicleta',v:7}] },
   { q:'¿Qué es lo primero que hacés al llegar a casa?', active:true,
@@ -1875,6 +1880,9 @@ QUESTIONS = [
   { q:'¿Cuál es la mejor excusa para llegar tarde?', active:true,
     resp:[{t:'El trufi no pasó',v:36},{t:'Me quedé dormido/a',v:30},{t:'Se me olvidó algo en casa',v:18},{t:'Había mucho tráfico',v:10},{t:'No hay excusa, llegué tarde',v:6}] }
 ];
+
+// Cargar preguntas por defecto al inicio (se pisan si Supabase ya tiene)
+QUESTIONS = DEFAULT_QUESTIONS.map(q => ({...q}));
 
 // On load
 window.addEventListener('load', () => {
