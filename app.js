@@ -353,14 +353,11 @@ async function presWrong() {
 
 async function presRevealAll() {
   const q=currentQuestion(); if(!q) return;
-  const isFailed = STATE.phase==='stealfailed';
   if(!STATE.revealed) STATE.revealed=new Array(q.resp.length).fill(false);
-  let added=0;
-  q.resp.forEach((r,i)=>{if(!STATE.revealed[i]){STATE.revealed[i]=true;added+=r.v;}});
-  if(!isFailed) STATE.roundPoints=(STATE.roundPoints||0)+added;
-  STATE.phase='roundover';
+  q.resp.forEach((r,i)=>{if(!STATE.revealed[i]) STATE.revealed[i]=true;});
+  // No suma puntos — solo revela para el público
   renderFromState(); await saveState();
-  presToast('👁 Todo revelado — presioná ＋ Sumar puntos para asignarlos','info');
+  presToast('👁 Todo revelado para el público','info');
 }
 
 async function presPassPoints() {
