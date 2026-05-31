@@ -88,7 +88,6 @@ function goRole() {
 // ============================================================
 async function enterRole(role) {
   currentRole = role;
-  if (!initSupabase()) { showView(role); if(role==='admin')loadAdminData(); renderFromState(); return; }
   showView(role);
   await loadState();
   renderFromState();
@@ -544,9 +543,7 @@ function setText(id,val){const e=el(id);if(e)e.textContent=val;}
 // ============================================================
 //  INIT
 // ============================================================
-window.addEventListener('load',()=>{
-  if(typeof SUPABASE_URL!=='undefined'&&SUPABASE_URL!=='PEGA_TU_URL_AQUI'){
-    if(initSupabase()) loadState().then(renderFromState);
-  }
+window.addEventListener('load', () => {
+  initSupabase();
   renderFromState();
 });
