@@ -19,7 +19,8 @@ const DEFAULT_STATE = {
   currentTeam: -1, scores: [0,0], wrongs: [0,0],
   revealed: [], roundPoints: 0,
   names: ['Equipo Azul','Equipo Rojo'],
-  school: 'Satélite Norte — Warnes'
+  school: 'Satélite Norte — Warnes',
+  showInstructions: false
 };
 
 const DEFAULT_QUESTIONS = [
@@ -164,6 +165,11 @@ function renderFromState() {
   updateNames(); updateScores(); updateXs();
   updateQuestion(); updateBoard(); updateTurn();
   updatePhase(); updatePot(); updateQBadge();
+  if (el('btn-instructions')) {
+    el('btn-instructions').textContent = STATE.showInstructions
+      ? '✕ Ocultar instrucciones'
+      : '📋 Mostrar instrucciones en proyector';
+  }
   if (STATE.phase==='gameover') { sndWin(); spawnConfetti(); showWinner(); }
 }
 
@@ -207,14 +213,13 @@ function updateXs() {
   });
 }
 
-let showingInstructions = false;
-
-function toggleInstructions() {
-  showingInstructions = !showingInstructions;
-  el('btn-instructions').textContent = showingInstructions
+async function toggleInstructions() {
+  STATE.showInstructions = !STATE.showInstructions;
+  el('btn-instructions').textContent = STATE.showInstructions
     ? '✕ Ocultar instrucciones'
     : '📋 Mostrar instrucciones en proyector';
   updateQuestion();
+  await saveState();
 }
 
 function updateQuestion() {
@@ -222,7 +227,7 @@ function updateQuestion() {
   const txt = q ? q.q : 'Esperando la primera pregunta...';
   ['pres-qtext','proj-qtext','spec-qtext'].forEach(id=>setText(id,txt));
   if(el('proj-inner')&&el('proj-waiting')&&el('proj-instructions')){
-    const showInstr  = showingInstructions;
+    const showInstr  = STATE.showInstructions;
     const showGame   = !showInstr && !(STATE.phase==='waiting' || !q);
     const showWait   = !showInstr && !showGame;
     el('proj-instructions').style.display = showInstr ? 'flex' : 'none';
