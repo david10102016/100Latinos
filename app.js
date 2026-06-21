@@ -87,6 +87,14 @@ function goRole() {
 //  ROLE ENTRY
 // ============================================================
 async function enterRole(role) {
+  if (role === 'admin') {
+    const clave = prompt('Clave de administrador:');
+    if (clave !== '2026') { alert('Clave incorrecta'); return; }
+  }
+  if (role === 'presenter') {
+    const clave = prompt('Clave de presentador:');
+    if (clave !== '2026') { alert('Clave incorrecta'); return; }
+  }
   currentRole = role;
   showView(role);
   await loadState();
@@ -129,7 +137,14 @@ function subscribeRealtime() {
       detectAndAnimate(prev);
       renderFromState();
     })
-    .subscribe(s => { if(s==='SUBSCRIBED'){showStatus('En vivo ●','connected');setTimeout(hideStatus,2000);} });
+    .subscribe(s => {
+      if(s==='SUBSCRIBED'){showStatus('En vivo ●','connected');setTimeout(hideStatus,2000);}
+      if(s==='CLOSED'||s==='CHANNEL_ERROR'||s==='TIMED_OUT'){
+        showStatus('Reconectando...','syncing');
+        channel = null;
+        setTimeout(async () => { await loadState(); renderFromState(); subscribeRealtime(); }, 1500);
+      }
+    });
 }
 
 function detectAndAnimate(prev) {
@@ -192,14 +207,27 @@ function updateXs() {
   });
 }
 
+let showingInstructions = false;
+
+function toggleInstructions() {
+  showingInstructions = !showingInstructions;
+  el('btn-instructions').textContent = showingInstructions
+    ? '✕ Ocultar instrucciones'
+    : '📋 Mostrar instrucciones en proyector';
+  updateQuestion();
+}
+
 function updateQuestion() {
   const q = currentQuestion();
   const txt = q ? q.q : 'Esperando la primera pregunta...';
   ['pres-qtext','proj-qtext','spec-qtext'].forEach(id=>setText(id,txt));
-  if(el('proj-inner')&&el('proj-waiting')){
-    const w = STATE.phase==='waiting' || !q;
-    el('proj-inner').style.display   = w ? 'none' : 'flex';
-    el('proj-waiting').style.display = w ? 'flex' : 'none';
+  if(el('proj-inner')&&el('proj-waiting')&&el('proj-instructions')){
+    const showInstr  = showingInstructions;
+    const showGame   = !showInstr && !(STATE.phase==='waiting' || !q);
+    const showWait   = !showInstr && !showGame;
+    el('proj-instructions').style.display = showInstr ? 'flex' : 'none';
+    el('proj-inner').style.display        = showGame  ? 'flex' : 'none';
+    el('proj-waiting').style.display      = showWait  ? 'flex' : 'none';
   }
 }
 
@@ -477,17 +505,23 @@ function renderAdminQList() {
   if(!QUESTIONS.length){list.innerHTML='<div style="color:var(--muted);font-size:.82rem;padding:8px">Sin preguntas. Agregá al menos una.</div>';return;}
   QUESTIONS.forEach((q,i)=>{
     const on=q.active!==false;
+    const respHTML = q.resp.map((r,j)=>`
+      <div style="display:flex;gap:6px;margin-top:4px;">
+        <input class="adm-inp" style="font-size:.78rem;padding:6px 10px;" id="qresp-${i}-${j}-t" value="${r.t.replace(/"/g,'&quot;')}">
+        <input class="adm-inp" style="font-size:.78rem;padding:6px 10px;width:70px;" type="number" id="qresp-${i}-${j}-v" value="${r.v}">
+      </div>
+    `).join('');
     const d=document.createElement('div'); d.className='q-item';
     d.innerHTML=`
       <div class="q-item-num">${i+1}</div>
       <div class="q-item-body">
-        <div class="q-item-text" id="qtxt-${i}">${q.q}</div>
-        <input class="q-item-edit" id="qedit-${i}" value="${q.q.replace(/"/g,'&quot;')}">
-        <div class="q-item-actions">
-          <button class="btn btn-ghost btn-xs" onclick="admEditQ(${i})">✏ Editar</button>
-          <button class="btn btn-ghost btn-xs" id="qsave-${i}" onclick="admSaveQ(${i})" style="display:none">💾 Guardar</button>
+        <input class="adm-inp" id="qedit-${i}" value="${q.q.replace(/"/g,'&quot;')}" style="margin-bottom:6px;">
+        <div style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:6px;">Respuestas y votos</div>
+        ${respHTML}
+        <div class="q-item-actions" style="margin-top:8px;">
+          <button class="btn btn-cyan btn-xs" onclick="admSaveQ(${i})">💾 Guardar cambios</button>
           <button class="btn btn-ghost btn-xs" onclick="admToggleQ(${i})">${on?'Desactivar':'Activar'}</button>
-          <button class="btn btn-danger btn-xs" onclick="admDeleteQ(${i})">✕</button>
+          <button class="btn btn-danger btn-xs" onclick="admDeleteQ(${i})">✕ Eliminar</button>
         </div>
       </div>
       <div class="q-item-badge ${on?'on':'off'}">${on?'Activa':'Inactiva'}</div>
@@ -496,18 +530,19 @@ function renderAdminQList() {
   });
 }
 
-function admEditQ(i) {
-  el(`qtxt-${i}`).style.display='none';
-  el(`qedit-${i}`).style.display='block';
-  el(`qsave-${i}`).style.display='inline-flex';
-  el(`qedit-${i}`).focus();
-}
-
 async function admSaveQ(i) {
-  const val=el(`qedit-${i}`).value.trim();
-  if(!val) return;
-  QUESTIONS[i].q=val;
-  await saveState(); renderAdminQList();
+  const qVal = el(`qedit-${i}`).value.trim();
+  if(!qVal) { alert('La pregunta no puede estar vacía'); return; }
+  QUESTIONS[i].q = qVal;
+  QUESTIONS[i].resp.forEach((r,j) => {
+    const tVal = el(`qresp-${i}-${j}-t`).value.trim();
+    const vVal = parseInt(el(`qresp-${i}-${j}-v`).value) || 0;
+    if (tVal) QUESTIONS[i].resp[j].t = tVal;
+    QUESTIONS[i].resp[j].v = vVal;
+  });
+  await saveState();
+  alert('✅ Pregunta actualizada');
+  renderAdminQList();
 }
 
 async function admSaveSettings() {
