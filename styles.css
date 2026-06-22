@@ -446,6 +446,12 @@ textarea.adm-inp { resize:vertical; min-height:80px; }
   width:100%; max-width:600px; position:relative; z-index:1;
   filter: drop-shadow(0 0 30px rgba(245,196,0,.25));
 }
+.welcome-cat {
+  font-family:'Teko',sans-serif; font-weight:600; font-size:.85rem;
+  letter-spacing:.18em; text-transform:uppercase; color:var(--gold);
+  border:1px solid rgba(245,196,0,.35); background:rgba(245,196,0,.06);
+  padding:5px 16px; border-radius:20px; position:relative; z-index:1;
+}
 .welcome-title {
   font-family:'Teko',sans-serif; font-size:1.2rem; letter-spacing:.06em;
   color:var(--muted); position:relative; z-index:1;
