@@ -20,30 +20,52 @@ const DEFAULT_STATE = {
   revealed: [], roundPoints: 0,
   names: ['Equipo Azul','Equipo Rojo'],
   school: 'Satélite Norte — Warnes',
-  showInstructions: false
+  showInstructions: false,
+  category: 'Escolares'
 };
 
 const DEFAULT_QUESTIONS = [
-  { q:'¿Cuál es el transporte más usado para llegar al colegio?', active:true,
+  { q:'¿Cuál es el transporte más usado para llegar al colegio?', active:true, cat:'Escolares',
     resp:[{t:'Moto',v:38},{t:'A pie',v:25},{t:'Trufi / micro',v:18},{t:'Me traen mis papás',v:12},{t:'Bicicleta',v:7}] },
-  { q:'¿Qué es lo primero que hacés al llegar a casa?', active:true,
+  { q:'¿Qué es lo primero que hacés al llegar a casa?', active:true, cat:'Escolares',
     resp:[{t:'Tirarme en la cama',v:41},{t:'Comer lo que sea',v:30},{t:'Cambiarme el uniforme',v:18},{t:'Salir a jugar',v:8},{t:'Ponerme a estudiar',v:3}] },
-  { q:'¿Qué es lo más esperado del recreo?', active:true,
+  { q:'¿Qué es lo más esperado del recreo?', active:true, cat:'Escolares',
     resp:[{t:'Comer',v:40},{t:'Ver a mis amigos',v:27},{t:'El partido de fútbol',v:20},{t:'Escapar del salón',v:9},{t:'Tus besos',v:4}] },
-  { q:'¿Cuál es la excusa más usada para no entregar la tarea?', active:true,
+  { q:'¿Cuál es la excusa más usada para no entregar la tarea?', active:true, cat:'Escolares',
     resp:[{t:'No entendí nada',v:35},{t:'Se me olvidó',v:28},{t:'Estaba malo/a',v:22},{t:'La hice pero no la traje',v:10},{t:'No había tarea',v:5}] },
-  { q:'¿Qué materia nadie quiere que empiece?', active:true,
+  { q:'¿Qué materia nadie quiere que empiece?', active:true, cat:'Escolares',
     resp:[{t:'Matemáticas',v:45},{t:'Física',v:28},{t:'Química',v:15},{t:'La del profe que grita',v:8},{t:'Todas por igual',v:4}] },
-  { q:'¿Qué es lo que más distrae en clase?', active:true,
+  { q:'¿Qué es lo que más distrae en clase?', active:true, cat:'Escolares',
     resp:[{t:'El compañero gracioso',v:38},{t:'Mirar por la ventana',v:27},{t:'Pensar en el recreo',v:20},{t:'Pasar notitas',v:11},{t:'Esa persona que te gusta',v:4}] },
-  { q:'¿Cómo llegás al colegio un lunes?', active:true,
+  { q:'¿Cómo llegás al colegio un lunes?', active:true, cat:'Escolares',
     resp:[{t:'Dormido/a caminando',v:42},{t:'Tarde como siempre',v:26},{t:'De mal humor sin razón',v:18},{t:'Rezando que cancelen algo',v:10},{t:'Bien y motivado/a',v:4}] },
-  { q:'¿Qué frase del profe ya todos memorizaron?', active:true,
+  { q:'¿Qué frase del profe ya todos memorizaron?', active:true, cat:'Escolares',
     resp:[{t:'Esto entra en el parcial',v:40},{t:'Silencio por favor',v:28},{t:'Eso lo vieron antes',v:18},{t:'El que no entregó que pase',v:10},{t:'Último aviso',v:4}] },
-  { q:'¿Qué hacés cuando el profe sale del salón?', active:true,
+  { q:'¿Qué hacés cuando el profe sale del salón?', active:true, cat:'Escolares',
     resp:[{t:'El salón explota en caos',v:44},{t:'Me cambio de asiento',v:24},{t:'Hablo con el de al lado',v:18},{t:'Salgo a dar una vuelta',v:10},{t:'Sigo estudiando',v:4}] },
-  { q:'¿Cuál es la mejor excusa para llegar tarde?', active:true,
-    resp:[{t:'El trufi no pasó',v:36},{t:'Me quedé dormido/a',v:30},{t:'Se me olvidó algo en casa',v:18},{t:'Había mucho tráfico',v:10},{t:'No hay excusa, llegué tarde',v:6}] }
+  { q:'¿Cuál es la mejor excusa para llegar tarde?', active:true, cat:'Escolares',
+    resp:[{t:'El trufi no pasó',v:36},{t:'Me quedé dormido/a',v:30},{t:'Se me olvidó algo en casa',v:18},{t:'Había mucho tráfico',v:10},{t:'No hay excusa, llegué tarde',v:6}] },
+
+  { q:'¿Qué es lo primero que hacés al despertar?', active:true, cat:'Vida Cotidiana',
+    resp:[{t:'Mirar el celular',v:42},{t:'Quedarte 5 minutos más en la cama',v:28},{t:'Ir al baño',v:18},{t:'Desayunar',v:8},{t:'Rezar o agradecer',v:4}] },
+  { q:'¿Qué es lo que más se extraña de la niñez?', active:true, cat:'Vida Cotidiana',
+    resp:[{t:'No tener responsabilidades',v:40},{t:'Las vacaciones largas',v:24},{t:'Jugar sin pensar en nada',v:20},{t:'La comida de mamá/papá',v:10},{t:'Los amigos de esa época',v:6}] },
+  { q:'Cuando alguien te dice "no eres tú, soy yo", ¿qué realmente quiere decir?', active:true, cat:'Vida Cotidiana',
+    resp:[{t:'Ya no me gustas',v:40},{t:'Conocí a alguien más',v:26},{t:'Necesito mi espacio',v:18},{t:'Quiero que sigamos siendo amigos',v:10},{t:'Es la verdad, tengo un problema yo',v:6}] },
+  { q:'Cuando alguien dice "tengo que revisar mi agenda" antes de confirmar un plan, ¿qué quiere decir?', active:true, cat:'Vida Cotidiana',
+    resp:[{t:'No tiene ganas de ir',v:40},{t:'Realmente está ocupado',v:26},{t:'Está buscando una excusa elegante',v:18},{t:'Va a confirmar después',v:10},{t:'Definitivamente va a ir',v:6}] },
+  { q:'¿Qué se hace primero cuando el WiFi está inestable?', active:true, cat:'Vida Cotidiana',
+    resp:[{t:'Reiniciar el router',v:44},{t:'Revisar el celular con datos para quejarse',v:22},{t:'Llamar a la compañía',v:16},{t:'Culpar a alguien de la casa',v:10},{t:'Aceptar la situación con calma',v:8}] },
+  { q:'¿Qué es lo que una mujer prefiere no revelar?', active:true, cat:'Vida Cotidiana',
+    resp:[{t:'Su edad',v:38},{t:'Su peso',v:26},{t:'Cuántos novios (o exnovios) ha tenido',v:18},{t:'Cuánto le costó su ropa',v:12},{t:'Si tiene cirugías estéticas',v:6}] },
+  { q:'¿Qué ruido o sonido no te dejaría dormir en la noche?', active:true, cat:'Vida Cotidiana',
+    resp:[{t:'Un ronquido (de la pareja)',v:34},{t:'Música a todo volumen o fiesta del vecino',v:26},{t:'El ladrido de un perro',v:18},{t:'La alarma de un carro',v:14},{t:'El zumbido de un mosquito cerca de la oreja',v:8}] },
+  { q:'Menciona algo que prendes y apagas todos los días', active:true, cat:'Vida Cotidiana',
+    resp:[{t:'Luz / Foco',v:40},{t:'Celular / Computadora',v:28},{t:'Televisión',v:18},{t:'Aire acondicionado o ventilador',v:10},{t:'El microondas',v:4}] },
+  { q:'Nombra algo que al salir de la casa no se te olvida', active:true, cat:'Vida Cotidiana',
+    resp:[{t:'Llaves',v:36},{t:'Celular',v:28},{t:'Billetera / Cartera',v:20},{t:'Dinero',v:10},{t:'Documentos',v:6}] },
+  { q:'Menciona algo que la gente hace cuando está nerviosa', active:true, cat:'Vida Cotidiana',
+    resp:[{t:'Morderse las uñas',v:36},{t:'Mover la pierna o el pie',v:26},{t:'Sudar las manos',v:20},{t:'Jugar con el celular',v:12},{t:'Hablar más rápido de lo normal',v:6}] }
 ];
 
 let STATE     = { ...DEFAULT_STATE };
@@ -226,6 +248,7 @@ function updateQuestion() {
   const q = currentQuestion();
   const txt = q ? q.q : 'Esperando la primera pregunta...';
   ['pres-qtext','proj-qtext','spec-qtext'].forEach(id=>setText(id,txt));
+  setText('proj-cat-badge', STATE.category||'Escolares');
   if(el('proj-inner')&&el('proj-waiting')&&el('proj-instructions')){
     const showInstr  = STATE.showInstructions;
     const showGame   = !showInstr && !(STATE.phase==='waiting' || !q);
@@ -324,8 +347,8 @@ function phaseLabel() {
 }
 
 function currentQuestion() {
-  const qs = QUESTIONS.filter(q=>q.active!==false);
-  return qs[STATE.qIdx]||null;
+  const qs = QUESTIONS.filter(q=>q.active!==false && (q.cat||'Escolares')===(STATE.category||'Escolares'));
+  return qs[STATE.qIdx] || null;
 }
 
 // ============================================================
@@ -408,7 +431,7 @@ async function presPassPoints() {
 
 async function presNext() {
   STATE.qIdx=(STATE.qIdx||0)+1;
-  const qs=QUESTIONS.filter(q=>q.active!==false);
+  const qs=QUESTIONS.filter(q=>q.active!==false && (q.cat||'Escolares')===(STATE.category||'Escolares'));
   if(STATE.qIdx>=Math.min(STATE.maxQ||5,qs.length)){
     STATE.phase='gameover'; renderFromState(); await saveState(); showWinner(); return;
   }
@@ -501,7 +524,18 @@ async function loadAdminData() {
   el('adm-t2').value       = (STATE.names||[])[1]||'';
   el('adm-maxq').value     = STATE.maxQ||5;
   el('adm-maxfails').value = STATE.maxFails||3;
+  renderCategorySelect();
   renderAdminQList();
+}
+
+function getAllCategories() {
+  return [...new Set(QUESTIONS.map(q=>q.cat||'Escolares'))];
+}
+
+function renderCategorySelect() {
+  const sel = el('adm-category'); if(!sel) return;
+  const cats = getAllCategories();
+  sel.innerHTML = cats.map(c=>`<option value="${c}" ${c===(STATE.category||'Escolares')?'selected':''}>${c}</option>`).join('');
 }
 
 function renderAdminQList() {
@@ -510,6 +544,7 @@ function renderAdminQList() {
   if(!QUESTIONS.length){list.innerHTML='<div style="color:var(--muted);font-size:.82rem;padding:8px">Sin preguntas. Agregá al menos una.</div>';return;}
   QUESTIONS.forEach((q,i)=>{
     const on=q.active!==false;
+    const cat=q.cat||'Escolares';
     const respHTML = q.resp.map((r,j)=>`
       <div style="display:flex;gap:6px;margin-top:4px;">
         <input class="adm-inp" style="font-size:.78rem;padding:6px 10px;" id="qresp-${i}-${j}-t" value="${r.t.replace(/"/g,'&quot;')}">
@@ -521,6 +556,10 @@ function renderAdminQList() {
       <div class="q-item-num">${i+1}</div>
       <div class="q-item-body">
         <input class="adm-inp" id="qedit-${i}" value="${q.q.replace(/"/g,'&quot;')}" style="margin-bottom:6px;">
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+          <span style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;">Categoría:</span>
+          <input class="adm-inp" id="qcat-${i}" value="${cat.replace(/"/g,'&quot;')}" style="font-size:.78rem;padding:5px 10px;width:160px;">
+        </div>
         <div style="font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:6px;">Respuestas y votos</div>
         ${respHTML}
         <div class="q-item-actions" style="margin-top:8px;">
@@ -529,7 +568,10 @@ function renderAdminQList() {
           <button class="btn btn-danger btn-xs" onclick="admDeleteQ(${i})">✕ Eliminar</button>
         </div>
       </div>
-      <div class="q-item-badge ${on?'on':'off'}">${on?'Activa':'Inactiva'}</div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">
+        <div class="q-item-badge ${on?'on':'off'}">${on?'Activa':'Inactiva'}</div>
+        <div style="font-size:.62rem;color:var(--cyan);text-transform:uppercase;letter-spacing:.06em;">${cat}</div>
+      </div>
     `;
     list.appendChild(d);
   });
@@ -537,8 +579,10 @@ function renderAdminQList() {
 
 async function admSaveQ(i) {
   const qVal = el(`qedit-${i}`).value.trim();
+  const catVal = el(`qcat-${i}`).value.trim();
   if(!qVal) { alert('La pregunta no puede estar vacía'); return; }
   QUESTIONS[i].q = qVal;
+  QUESTIONS[i].cat = catVal || 'Escolares';
   QUESTIONS[i].resp.forEach((r,j) => {
     const tVal = el(`qresp-${i}-${j}-t`).value.trim();
     const vVal = parseInt(el(`qresp-${i}-${j}-v`).value) || 0;
@@ -547,6 +591,7 @@ async function admSaveQ(i) {
   });
   await saveState();
   alert('✅ Pregunta actualizada');
+  renderCategorySelect();
   renderAdminQList();
 }
 
@@ -560,11 +605,13 @@ async function admSaveSettings() {
 
 function admAddQuestion() {
   const qText=el('adm-nq').value.trim(), rText=el('adm-nr').value.trim();
+  const catText=el('adm-ncat').value.trim()||'Escolares';
   if(!qText||!rText){alert('Completá la pregunta y las respuestas');return;}
   const resp=rText.split('\n').map(line=>{const p=line.split(',');return{t:p[0].trim(),v:parseInt(p[1])||10};}).filter(r=>r.t);
   if(resp.length<2){alert('Necesitás al menos 2 respuestas');return;}
-  QUESTIONS.push({q:qText,resp,active:true});
-  el('adm-nq').value=''; el('adm-nr').value='';
+  QUESTIONS.push({q:qText,resp,active:true,cat:catText});
+  el('adm-nq').value=''; el('adm-nr').value=''; el('adm-ncat').value='';
+  renderCategorySelect();
   renderAdminQList(); saveState();
 }
 
@@ -575,17 +622,21 @@ async function admToggleQ(i) {
 
 async function admDeleteQ(i) {
   if(!confirm('¿Eliminar esta pregunta?')) return;
-  QUESTIONS.splice(i,1); renderAdminQList(); await saveState();
+  QUESTIONS.splice(i,1);
+  renderCategorySelect();
+  renderAdminQList(); await saveState();
 }
 
 async function admStartGame() {
-  const qs=QUESTIONS.filter(q=>q.active!==false);
-  if(!qs.length){alert('Agregá al menos una pregunta');return;}
-  // Mezclar preguntas activas aleatoriamente
+  const catSel = el('adm-category');
+  const chosenCat = catSel ? catSel.value : (STATE.category||'Escolares');
+  const qs = QUESTIONS.filter(q=>q.active!==false && (q.cat||'Escolares')===chosenCat);
+  if(!qs.length){alert('No hay preguntas activas en esa categoría');return;}
+  STATE.category = chosenCat;
   shuffleQuestions();
   STATE.qIdx=0; STATE.scores=[0,0]; STATE.wrongs=[0,0];
   STATE.revealed=[]; STATE.roundPoints=0; STATE.currentTeam=-1; STATE.phase='waiting';
-  await saveState(); alert('✅ Partida iniciada — preguntas mezcladas aleatoriamente');
+  await saveState(); alert(`✅ Partida iniciada — categoría "${chosenCat}" — preguntas mezcladas aleatoriamente`);
 }
 
 async function admResetGame() {
@@ -596,15 +647,20 @@ async function admResetGame() {
   await saveState(); alert('✅ Reiniciado — preguntas mezcladas aleatoriamente');
 }
 
-// Mezcla solo las preguntas activas, deja inactivas al final
+// Mezcla las preguntas activas dentro de cada categoría, deja inactivas al final
 function shuffleQuestions() {
-  const active   = QUESTIONS.filter(q=>q.active!==false);
+  const cats = [...new Set(QUESTIONS.map(q=>q.cat||'Escolares'))];
+  let result = [];
+  cats.forEach(cat => {
+    const active = QUESTIONS.filter(q=>q.active!==false && (q.cat||'Escolares')===cat);
+    for(let i=active.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [active[i],active[j]]=[active[j],active[i]];
+    }
+    result = result.concat(active);
+  });
   const inactive = QUESTIONS.filter(q=>q.active===false);
-  for(let i=active.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [active[i],active[j]]=[active[j],active[i]];
-  }
-  QUESTIONS=[...active,...inactive];
+  QUESTIONS = [...result, ...inactive];
 }
 
 // ============================================================
@@ -618,6 +674,14 @@ function hideStatus(){el('status-bar').classList.remove('show');}
 // ============================================================
 function el(id){return document.getElementById(id);}
 function setText(id,val){const e=el(id);if(e)e.textContent=val;}
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i=a.length-1;i>0;i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
 
 // ============================================================
 //  INIT
