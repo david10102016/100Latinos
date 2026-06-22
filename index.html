@@ -127,6 +127,10 @@
               <input class="adm-inp" id="adm-nq" placeholder="¿Cuál es la materia favorita?">
             </div>
             <div>
+              <label class="adm-label">Categoría — escribí el nombre que quieras</label>
+              <input class="adm-inp" id="adm-ncat" placeholder="Ej: Escolares, Vida Cotidiana, Universidad...">
+            </div>
+            <div>
               <label class="adm-label">Respuestas — una por línea: Texto,votos</label>
               <textarea class="adm-inp" id="adm-nr" placeholder="Educación Física,45&#10;Matemáticas,25&#10;Arte,18&#10;Historia,8&#10;Química,4"></textarea>
             </div>
@@ -140,6 +144,10 @@
     <div class="admin-section">
       <div class="admin-section-head">🎮 Control del juego</div>
       <div class="admin-section-body">
+        <div>
+          <label class="adm-label">Categoría a jugar esta partida</label>
+          <select class="adm-inp" id="adm-category"></select>
+        </div>
         <button class="btn btn-gold btn-block btn-lg" onclick="admStartGame()">▶ INICIAR PARTIDA</button>
         <button class="btn btn-danger btn-block" onclick="admResetGame()">🔄 Reiniciar partida</button>
       </div>
@@ -294,6 +302,7 @@
         <line x1="355" y1="258" x2="362" y2="258" stroke="#00E676" stroke-width="1.5"/>
       </g>
     </svg>
+    <div class="welcome-cat" id="proj-cat-badge">Escolares</div>
     <div class="welcome-title">El conductor está eligiendo el equipo que arranca...</div>
     <div class="welcome-dots">
       <div class="welcome-dot dot-blue"></div>
