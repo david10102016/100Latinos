@@ -256,6 +256,29 @@ function updateQuestion() {
     el('proj-instructions').style.display = showInstr ? 'flex' : 'none';
     el('proj-inner').style.display        = showGame  ? 'flex' : 'none';
     el('proj-waiting').style.display      = showWait  ? 'flex' : 'none';
+    if (showWait) spawnWelcomeParticles();
+  }
+}
+
+let welcomeParticlesSpawned = false;
+function spawnWelcomeParticles() {
+  const wrap = el('welcome-particles');
+  if (!wrap || welcomeParticlesSpawned) return;
+  welcomeParticlesSpawned = true;
+  const colors = ['#F5C400','#00D4FF','#FF4D4D','#00E676','#FFE066'];
+  const count = 28;
+  for (let i=0; i<count; i++) {
+    const p = document.createElement('div');
+    p.className = 'welcome-particle';
+    const size = 3 + Math.random()*5;
+    p.style.width  = size+'px';
+    p.style.height = size+'px';
+    p.style.left   = Math.random()*100+'%';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.boxShadow  = `0 0 ${size*2}px ${p.style.background}`;
+    p.style.animationDuration = (6+Math.random()*8)+'s';
+    p.style.animationDelay    = (Math.random()*8)+'s';
+    wrap.appendChild(p);
   }
 }
 
