@@ -647,6 +647,24 @@ async function admResetGame() {
   await saveState(); alert('✅ Reiniciado — preguntas mezcladas aleatoriamente');
 }
 
+// Fuerza la recarga de TODAS las preguntas por defecto del código a Supabase,
+// agregando las que falten sin duplicar las que ya existen (comparando texto de pregunta)
+async function admReloadDefaultQuestions() {
+  if(!confirm('Esto va a agregar las preguntas por defecto que falten en tu base de datos (sin borrar las que ya tenés). ¿Continuar?')) return;
+  const existingTexts = new Set(QUESTIONS.map(q=>q.q));
+  let added = 0;
+  DEFAULT_QUESTIONS.forEach(dq => {
+    if(!existingTexts.has(dq.q)){
+      QUESTIONS.push({...dq, resp: dq.resp.map(r=>({...r}))});
+      added++;
+    }
+  });
+  await saveState();
+  renderCategorySelect();
+  renderAdminQList();
+  alert(added>0 ? `✅ Se agregaron ${added} preguntas nuevas` : 'No había preguntas nuevas para agregar, ya estaban todas cargadas');
+}
+
 // Mezcla las preguntas activas dentro de cada categoría, deja inactivas al final
 function shuffleQuestions() {
   const cats = [...new Set(QUESTIONS.map(q=>q.cat||'Escolares'))];
