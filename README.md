@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/portada.png" width="500">
+<img src="portada.png" width="500">
 
 # 🎮 100 Estudiantes Dicen
 
@@ -45,13 +45,13 @@ El sistema separa responsabilidades en cuatro vistas independientes, todas sincr
 | ⚙️ **Administrador** | Gestiona preguntas, respuestas, categorías y puntajes sin tocar código. |
 
 <p align="center">
-<img src="docs/presentador.png" width="700">
+<img src="presentador.png" width="700">
 <br>
 <sub>Vista del Presentador: control de equipos, revelado de respuestas y puntaje en vivo</sub>
 </p>
 
 <p align="center">
-<img src="docs/proyector.png" width="500">
+<img src="proyector.png" width="500">
 <br>
 <sub>Pantalla de transición del Proyector, pensada para verse bien en TV o proyector de aula</sub>
 </p>
@@ -69,7 +69,7 @@ Todo el contenido del juego se configura sin tocar una línea de código:
 - ✅ Configurar puntajes y controlar el flujo de la partida (iniciar / reiniciar)
 
 <p align="center">
-<img src="docs/admin.png" width="600">
+<img src="admin.png" width="600">
 <br>
 <sub>Edición de respuestas por categoría y control de partida desde el panel admin</sub>
 </p>
@@ -92,11 +92,10 @@ Todo el contenido del juego se configura sin tocar una línea de código:
 ├── styles.css
 ├── app.js
 ├── supabase-config.js
-├── docs/
-│   ├── portada.png
-│   ├── presentador.png
-│   ├── proyector.png
-│   └── admin.png
+├── portada.png
+├── presentador.png
+├── proyector.png
+├── admin.png
 └── README.md
 ```
 
